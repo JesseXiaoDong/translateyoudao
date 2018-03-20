@@ -1,4 +1,5 @@
 import requests
+import json
 from threading import Thread
 from time import sleep
 
@@ -16,13 +17,13 @@ def get_proxy_ip(order_no):
     """
     api_url = PROXY_API_URL + order_no
     with requests.Session() as s:
-        response = s.get(api_url, timeout=TIMEOUT).text
+        response = s.get(api_url, timeout=TIMEOUT).text.strip()
     # 订单号不存在
     if 'false' in response:
-        raise ValueError('无忧IP代理订单号无效或设置错误')
-    proxy_ip = response.strip('\n')
+        error = json.loads(response)
+        raise ValueError(error['msg'])
 
-    return 'http://' + proxy_ip
+    return 'http://' + response
 
 
 def flush_proxies(func, args, proxies, sleep_time):
