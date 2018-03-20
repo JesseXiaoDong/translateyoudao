@@ -32,9 +32,9 @@ Namespaces are one honking great idea -- let's do more of those!
 """
 words = re.findall(p, text)
 
-# 代理订单号
-order_no = '28f69ed72e7024d8fe1988d4bf6f8e54'
-# 获得代理对象
+# 改成你的代理订单号
+order_no = 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx'
+# 获得代理对象，并且动态更新
 proxies = get_proxies(get_proxy_ip, args=(order_no, ))
 # 建议一次不要传入太多单词
 print(translate(*words, proxies=proxies))
