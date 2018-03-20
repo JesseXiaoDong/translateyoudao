@@ -56,7 +56,7 @@ from translateyoudao.translate import translate
 print(translate('你好', '再见', word_from='zh-CHS', word_to='ja'))
 ```
 
-##语言代号
+## 语言代号
 * 中文: 'zh-CHS'
 * 英语: 'en'
 * 日语: 'ja'
@@ -67,7 +67,7 @@ print(translate('你好', '再见', word_from='zh-CHS', word_to='ja'))
 * 葡萄牙语: 'pt'
 * 越南语: 'vi'
 
-##支持的语言翻译方向
+## 支持的语言翻译方向
 * 中文->英语
 * 英语->中文
 * 中文->日语
