@@ -25,7 +25,7 @@ def get_proxy_ip(order_no):
     return 'http://' + proxy_ip
 
 
-def flush_proxies(func, args, proxies):
+def flush_proxies(func, args, proxies, sleep_time):
     """
     定时切换代理IP，改变已经存在IP代理字典对象
 
@@ -35,12 +35,12 @@ def flush_proxies(func, args, proxies):
         proxies: IP代理字典
     """
     while True:
-        sleep(5)
+        sleep(sleep_time)
         proxy_ip = func(*args)
         proxies['https'] = proxies['http'] = proxy_ip
 
 
-def get_proxies(func, args):
+def get_proxies(func, args, sleep_time=5):
     """
     根据所传入的获取代理IP函数获取代理IP，并构造requests所需格式的IP代理字典，
     并另起一个守护线程每隔5秒更新一次IP代理。
@@ -48,11 +48,12 @@ def get_proxies(func, args):
     :param
         func: 获取代理IP的函数
         args: 获取代理IP函数所需参数
+        sleep_time: 刷新IP代理的间隔时间，默认5秒
     """
     proxy_ip = func(*args)
     proxies = {}
     proxies['https'] = proxies['http'] = proxy_ip
-    t1 = Thread(target=flush_proxies, args=(func, args, proxies), daemon=True)
+    t1 = Thread(target=flush_proxies, args=(func, args, proxies, sleep_time), daemon=True)
     t1.start()
 
     return proxies
