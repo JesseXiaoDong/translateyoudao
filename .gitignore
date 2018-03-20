@@ -1,0 +1,18 @@
+# Python缓存文件
+__pycache__
+*.py[co]
+
+# vscode编辑器文件
+.vscode
+
+# MacOs 隐藏文件
+.DS_Store
+
+# pipenv lock 文件
+Pipfile.lock
+
+# Python安装包信息
+*.egg-info
+
+# 本地测试用脚本
+/run.py
