@@ -11,8 +11,10 @@ __pycache__
 # pipenv lock 文件
 Pipfile.lock
 
-# Python安装包信息
-*.egg-info
-
 # 本地测试用脚本
 /run.py
+
+# Python打包文件
+/build
+/dist
+*.egg-info
