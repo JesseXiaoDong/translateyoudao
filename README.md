@@ -30,6 +30,7 @@ from translateyoudao.translate import translate
 
 # 支持多个词一起翻译
 print(translate('hello', '再见'))
+# output: {'hello': '你好', '再见': 'goodbye'}
 ```
 
 设置代理(无忧代理IP):
@@ -45,6 +46,7 @@ order_no = 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx'
 proxies = get_proxies(get_proxy_ip, args=(order_no, ))
 # 建议一次不要传入太多词
 print(translate('hello', '再见', 'world', proxies=proxies))
+# output: {'再见': 'goodbye', 'hello': '你好', 'world': '世界'}
 ```
 
 自定义设置当前语言和目标语言:
@@ -55,6 +57,7 @@ from translateyoudao.translate import translate
 
 # 中文到日语
 print(translate('你好', '再见', word_from='zh-CHS', word_to='ja'))
+# output: {'你好': 'こんにちは', '再见': 'さようなら'}
 ```
 
 ## 语言代号
