@@ -1,8 +1,8 @@
 # translateyoudao
-基于有道云web翻译接口的翻译工具，翻译结果基于 **[有道云翻译web版](http://fanyi.youdao.com/)** ，无需有道云账号，设置动态代理后理论上可无限调用，适合翻译大量词汇。
+基于有道云web翻译接口的翻译工具包，翻译结果基于 **[有道云翻译web版](http://fanyi.youdao.com/)** ，无需有道云账号，设置动态代理后理论上可无限调用，适合翻译大量词汇。
 内置多线程和动态代理的实现方案，以及基于 **[无忧代理IP（付费的）](https://www.python.org/downloads/)** 的代理IP获取方法。
 
-有道云翻译有开放的翻译接口，不过免费账号有字符限制（土豪当我没说~），所以我就实现了一个基于有道云翻译web版（破解的API）的翻译工具。
+有道云翻译有开放的翻译接口，不过免费账号有字符限制（土豪当我没说~），所以我就实现了一个基于有道云翻译web版（破解的API）的翻译工具包。
 
 ### <font color=red>如果是高频次大量的翻译一定要设置IP代理，不然会被有道云那边封掉IP</font>
 
@@ -40,9 +40,9 @@ demo.py
 from translateyoudao.translate import translate
 from translateyoudao.proxy import get_proxies, get_proxy_ip
 
-# 代理订单号
+# 输入你购买的代理订单号
 order_no = 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx'
-# 获得代理对象
+# 获得代理对象，只需获取一次代理对象就行了，它会自动实现每隔5秒刷新一次代理IP
 proxies = get_proxies(get_proxy_ip, args=(order_no, ))
 # 建议一次不要传入太多词
 print(translate('hello', '再见', 'world', proxies=proxies))
