@@ -3,7 +3,7 @@ import json
 from threading import Thread
 from time import sleep
 
-from .settings import PROXY_API_URL, TIMEOUT
+from .settings import PROXY_API_URL, PROXY_API_TIMEOUT
 
 
 def get_proxy_ip(order_no):
@@ -17,7 +17,7 @@ def get_proxy_ip(order_no):
     """
     api_url = PROXY_API_URL + order_no
     with requests.Session() as s:
-        response = s.get(api_url, timeout=TIMEOUT).text.strip()
+        response = s.get(api_url, timeout=PROXY_API_TIMEOUT).text.strip()
     # 订单号不存在
     if 'false' in response:
         error = json.loads(response)

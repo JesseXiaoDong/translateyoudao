@@ -20,6 +20,6 @@ BASIC_DATA = {
     "typoResult": "false",
 }
 
-TIMEOUT = 10
+PROXY_API_TIMEOUT = 10
 
 PROXY_API_URL = "http://api.ip.data5u.com/dynamic/get.html?order="

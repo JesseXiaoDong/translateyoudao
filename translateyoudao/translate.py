@@ -5,10 +5,10 @@ from time import time
 from copy import copy
 from concurrent.futures import ThreadPoolExecutor, as_completed
 
-from .settings import INDEX_URL, API_URL, HEADERS, BASIC_DATA, TIMEOUT
+from .settings import INDEX_URL, API_URL, HEADERS, BASIC_DATA
 
 
-def request_api(word, proxies=None, word_from='AUTO', word_to='AUTO', retry_count=20):
+def request_api(word, proxies=None, word_from='AUTO', word_to='AUTO', timeout=5, retry_count=20):
     """
     模拟用户请求调用有道云翻译的web接口，取得翻译结果
 
@@ -16,6 +16,7 @@ def request_api(word, proxies=None, word_from='AUTO', word_to='AUTO', retry_coun
         word_from: 当前语言
         word_to: 目标语言
         proxies: 代理设置
+        timeout: 请求超时时间，默认5秒
         retry_count: 请求重试次数，默认20次
 
     :语言代号
@@ -47,8 +48,8 @@ def request_api(word, proxies=None, word_from='AUTO', word_to='AUTO', retry_coun
         # 网络相关错误重试
         while n < retry_count:
             try:
-                s.get(INDEX_URL, timeout=TIMEOUT, headers=HEADERS, proxies=proxies)
-                res = s.post(API_URL, timeout=TIMEOUT, data=data, headers=HEADERS, proxies=proxies)
+                s.get(INDEX_URL, timeout=timeout, headers=HEADERS, proxies=proxies)
+                res = s.post(API_URL, timeout=timeout, data=data, headers=HEADERS, proxies=proxies)
                 res = json.loads(res.text)
                 if res['errorCode'] != 0:
                     raise ValueError
@@ -65,7 +66,13 @@ def request_api(word, proxies=None, word_from='AUTO', word_to='AUTO', retry_coun
 
 
 def translate(
-    *words, proxies=None, word_from='AUTO', word_to='AUTO', retry_count=20, max_workers=10
+    *words,
+    proxies=None,
+    word_from='AUTO',
+    word_to='AUTO',
+    timeout=5,
+    retry_count=20,
+    max_workers=5
 ):
     """
     翻译，支持多个词，默认自动检测语言，也可以自己设置
@@ -74,8 +81,9 @@ def translate(
         word_from: 当前语言
         word_to: 目标语言
         proxies: 代理设置
+        timeout: 请求超时时间，默认5秒
         retry_count: 请求重试次数，默认20次
-        max_workers: 最大线程数量，默认10个
+        max_workers: 最大线程数量，默认5个
 
     :语言代号
         中文: 'zh-CHS', 英语: 'en', 日语: 'ja', 韩语: 'ko', 法语: 'fr', 俄语: 'ru',
@@ -91,7 +99,8 @@ def translate(
     """
     with ThreadPoolExecutor(max_workers=max_workers) as executor:
         word_to_translate = {
-            executor.submit(request_api, word, proxies, word_from, word_to, retry_count): word
+            executor.submit(request_api, word, proxies, word_from, word_to, timeout, retry_count):
+            word
             for word in words
         }
         data = {}
