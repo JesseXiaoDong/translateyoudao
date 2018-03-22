@@ -20,6 +20,8 @@ BASIC_DATA = {
     "typoResult": "false",
 }
 
+MAX_WORD_LENGTH = int(5e3)
+
 PROXY_API_TIMEOUT = 10
 
 PROXY_API_URL = "http://api.ip.data5u.com/dynamic/get.html?order="

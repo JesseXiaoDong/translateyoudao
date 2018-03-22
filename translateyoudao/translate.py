@@ -1,11 +1,12 @@
 import requests
 import hashlib
 import json
+from random import randint, choice
 from time import time
 from copy import copy
 from concurrent.futures import ThreadPoolExecutor, as_completed
 
-from .settings import INDEX_URL, API_URL, HEADERS, BASIC_DATA
+from .settings import API_URL, HEADERS, BASIC_DATA, MAX_WORD_LENGTH
 
 
 def request_api(word, proxies=None, word_from='AUTO', word_to='AUTO', timeout=5, retry_count=20):
@@ -32,7 +33,7 @@ def request_api(word, proxies=None, word_from='AUTO', word_to='AUTO', timeout=5,
     :return 成功返回翻译后的字符串，失败返回False
     """
     # 单词不超过5000字符
-    word = str(word)[:int(5e3)]
+    word = str(word)[:MAX_WORD_LENGTH]
     data = copy(BASIC_DATA)
     data['i'] = word
     data['from'] = word_from
@@ -48,7 +49,12 @@ def request_api(word, proxies=None, word_from='AUTO', word_to='AUTO', timeout=5,
         # 网络相关错误重试
         while n < retry_count:
             try:
-                s.get(INDEX_URL, timeout=timeout, headers=HEADERS, proxies=proxies)
+                s.cookies.set(
+                    'OUTFOX_SEARCH_USER_ID',
+                    '{}@10.169.0.83'.format(choice((-1, 1)) * randint(1e9, 9e9)),
+                    path='/',
+                    domain='.youdao.com'
+                )
                 res = s.post(API_URL, timeout=timeout, data=data, headers=HEADERS, proxies=proxies)
                 res = json.loads(res.text)
                 if res['errorCode'] != 0:
@@ -72,7 +78,7 @@ def translate(
     word_to='AUTO',
     timeout=5,
     retry_count=20,
-    max_workers=5
+    max_workers=10
 ):
     """
     翻译，支持多个词，默认自动检测语言，也可以自己设置
@@ -83,7 +89,7 @@ def translate(
         proxies: 代理设置
         timeout: 请求超时时间，默认5秒
         retry_count: 请求重试次数，默认20次
-        max_workers: 最大线程数量，默认5个
+        max_workers: 最大线程数量，默认10个
 
     :语言代号
         中文: 'zh-CHS', 英语: 'en', 日语: 'ja', 韩语: 'ko', 法语: 'fr', 俄语: 'ru',
